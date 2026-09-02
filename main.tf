@@ -8,3 +8,12 @@ resource "aws_ebs_volume" "first_ebs" {
     Name="Demo-volume-terraform"
   }
 }
+
+resource "aws_ebs_volume" "second_ebs" {
+  availability_zone = "ap-south-2a"
+  size = 100
+  type="gp3"
+  tags={
+    Name="demo2-volume"
+  }
+}
