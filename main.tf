@@ -17,3 +17,13 @@ resource "aws_ebs_volume" "second_ebs" {
     Name="demo2-volume"
   }
 }
+
+# Create the snapshot
+resource "aws_ebs_snapshot" "xfusion_vol_ss" {
+  volume_id  = aws_ebs_volume.second_ebs.id
+  description = "Xfusion Snapshot"
+
+  tags = {
+    Name = "xfusion-vol-ss"
+  }
+}
