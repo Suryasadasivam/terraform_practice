@@ -1,0 +1,52 @@
+import time
+from pyspark.sql import SparkSession
+import pyspark.sql.functions as F
+
+# 1. Initialize Spark Session
+spark = SparkSession.builder \
+    .appName("DeduplicateAccountStream") \
+    .master("local[*]") \
+    .getOrCreate()
+
+spark.sparkContext.setLogLevel("WARN")
+
+aw_stream = spark.readStream \
+    .format("rate") \
+    .option("rowsPerSecond", 2) \
+    .load()
+
+# 3. Transform: Create an accountId. 
+# We use modulo (%) so the same accountIds (0, 1, 2, 3) repeat constantly.
+processed_stream = raw_stream.select(
+    F.lit("A123").alias("account_id"),
+    F.col("timestamp").alias("operation_timestamp")
+)
+
+# 4. Deduplicate: Define a watermark and drop duplicates within a 10-second window
+deduplicated_stream = processed_stream.withWatermark("operation_timestamp", "2 seconds").dropDuplicatesWithinWatermark(["account_id"])
+
+# 5. Sink: Write unique records out to the console
+query = deduplicated_stream.writeStream \
+    .format("console") \
+    .option("truncate", "false") \
+    .outputMode("append") \
+    .start()
+
+print("Stream started. Monitoring for 2 batches...")
+
+# 6. Monitor Loop: Stop after 2 batches
+try:
+    while query.isActive:
+        if query.recentProgress:
+            last_batch_id = query.recentProgress[-1].batchId
+            if last_batch_id >= 10:
+                print(f"\n[INFO] Batch {last_batch_id} completed. Stopping stream...")
+                query.stop()
+                break
+        time.sleep(0.5)
+except Exception as e:
+    print(f"Error: {e}")
+    query.stop()
+
+query.awaitTermination()
+print("Stream successfully stopped.")
