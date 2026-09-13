@@ -55,3 +55,28 @@ resource "aws_cloudwatch_metric_alarm" "datacenter_alarm" {
     InstanceId = aws_instance.datacenter_ec2.id
   }
 }
+
+
+#Create Public S3 Bucket Using Terraform
+resource "aws_s3_bucket" "x_fusion" {
+  bucket = "xfusion-s3-187261992"
+
+  tags = {
+    Name        = "xfusion-s3-187261992"
+  }
+}
+
+resource "aws_s3_bucket_acl" "example" {
+
+  bucket = aws_s3_bucket.x_fusion.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_public_access_block" "public_access" {
+  bucket = aws_s3_bucket.x_fusion.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
