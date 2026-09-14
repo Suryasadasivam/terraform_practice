@@ -80,3 +80,18 @@ resource "aws_s3_bucket_public_access_block" "public_access" {
   ignore_public_acls      = false
   restrict_public_buckets = false
 }
+
+# Create private S3 bucket for secure data storage
+resource "aws_s3_bucket" "nautilus_bucket" {
+  bucket = "nautilus-s3-15729"
+}
+
+# Block all public access to ensure private bucket
+resource "aws_s3_bucket_public_access_block" "nautilus_block" {
+  bucket = aws_s3_bucket.nautilus_bucket.id
+  
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
