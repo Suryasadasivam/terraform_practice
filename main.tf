@@ -95,3 +95,8 @@ resource "aws_s3_bucket_public_access_block" "nautilus_block" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+# Create IAM user for identity and access management
+resource "aws_iam_user" "iamuser_john" {
+  name = "iamuser_john"
+}
