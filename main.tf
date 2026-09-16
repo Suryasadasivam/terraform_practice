@@ -100,3 +100,9 @@ resource "aws_s3_bucket_public_access_block" "nautilus_block" {
 resource "aws_iam_user" "iamuser_john" {
   name = "iamuser_john"
 }
+
+# Create IAM group for identity and access management
+resource "aws_iam_group" "developers" {
+  name = "developers"
+}
+
