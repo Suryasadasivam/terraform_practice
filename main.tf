@@ -106,3 +106,16 @@ resource "aws_iam_group" "developers" {
   name = "developers"
 }
 
+
+# Create DynamoDB table for storing user data
+resource "aws_dynamodb_table" "basic-dynamodb-table" {
+  name           = "xfusion-users"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "xfusion_id"
+
+
+  attribute {
+    name = "xfusion_id"
+    type = "S"
+  }
+}
