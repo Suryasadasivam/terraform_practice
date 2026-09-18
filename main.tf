@@ -106,6 +106,27 @@ resource "aws_iam_group" "developers" {
   name = "developers"
 }
 
+# Create IAM policy for EC2 read-only access
+resource "aws_iam_policy" "iampolicy_yousuf" {
+  name        = "iampolicy_yousuf"
+  description = "Read-only access to EC2 console (instances, AMIs, and snapshots)"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeInstances",
+          "ec2:DescribeImages",
+          "ec2:DescribeSnapshots"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 
 # Create DynamoDB table for storing user data
 resource "aws_dynamodb_table" "basic-dynamodb-table" {
