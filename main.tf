@@ -140,3 +140,8 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
     type = "S"
   }
 }
+
+resource "aws_kinesis_stream" "devops_stream" {
+  name             = "devops-stream"
+  shard_count      = 1
+}
