@@ -140,7 +140,7 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
     type = "S"
   }
 }
-
+#Create AWS Kinesis Data Stream
 resource "aws_kinesis_stream" "devops_stream" {
   name             = "devops-stream"
   shard_count      = 1
