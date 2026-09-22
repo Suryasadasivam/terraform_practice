@@ -145,3 +145,8 @@ resource "aws_kinesis_stream" "devops_stream" {
   name             = "devops-stream"
   shard_count      = 1
 }
+
+# Create SNS topic for sending notifications
+resource "aws_sns_topic" "datacenter_notifications" {
+  name = "datacenter-notifications"
+}
