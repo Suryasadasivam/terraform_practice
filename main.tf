@@ -150,3 +150,14 @@ resource "aws_kinesis_stream" "devops_stream" {
 resource "aws_sns_topic" "datacenter_notifications" {
   name = "datacenter-notifications"
 }
+
+# Create CloudWatch log group for organizing log data
+resource "aws_cloudwatch_log_group" "nautilus_log_group" {
+  name = "nautilus-log-group"
+}
+
+# Create CloudWatch log stream for storing log events
+resource "aws_cloudwatch_log_stream" "nautilus_log_stream" {
+  name           = "nautilus-log-stream"
+  log_group_name = aws_cloudwatch_log_group.nautilus_log_group.name
+}
