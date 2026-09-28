@@ -161,3 +161,26 @@ resource "aws_cloudwatch_log_stream" "nautilus_log_stream" {
   name           = "nautilus-log-stream"
   log_group_name = aws_cloudwatch_log_group.nautilus_log_group.name
 }
+
+# Create CloudFormation stack to provision S3 bucket
+resource "aws_cloudformation_stack" "nautilus_stack" {
+  name = "nautilus-stack"
+
+  template_body = <<EOT
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "CloudFormation stack to create S3 bucket with versioning enabled",
+  "Resources": {
+    "NautilusBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "nautilus-bucket-31516",
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        }
+      }
+    }
+  }
+}
+EOT
+}
