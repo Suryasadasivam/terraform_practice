@@ -184,3 +184,14 @@ resource "aws_cloudformation_stack" "nautilus_stack" {
 }
 EOT
 }
+
+# Configure the AWS provider
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Create OpenSearch domain for log storage and search
+resource "aws_opensearch_domain" "xfusion" {
+  domain_name = "xfusion-es"
+  engine_version = "OpenSearch_2.11"
+}
