@@ -195,3 +195,17 @@ resource "aws_opensearch_domain" "xfusion" {
   domain_name = "xfusion-es"
   engine_version = "OpenSearch_2.11"
 }
+
+# Create Secrets Manager secret for storing sensitive data
+resource "aws_secretsmanager_secret" "xfusion" {
+  name = "xfusion-secret"
+}
+
+# Create secret version with key-value pair
+resource "aws_secretsmanager_secret_version" "xfusion_value" {
+  secret_id     = aws_secretsmanager_secret.xfusion.id
+  secret_string = jsonencode({
+    username = "admin"
+    password = "Namin123"
+  })
+}
