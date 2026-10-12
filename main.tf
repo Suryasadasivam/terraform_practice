@@ -209,3 +209,29 @@ resource "aws_secretsmanager_secret_version" "xfusion_value" {
     password = "Namin123"
   })
 }
+
+resource "aws_instance" "ec2" {
+  ami           = "ami-0c101f26f147fa7fd"
+  instance_type = "t2.micro"
+  subnet_id     = "subnet-2dcf179d826597773"
+  vpc_security_group_ids = ["sg-a9a6ded454a743fd7"]
+
+  tags = {
+    Name = "nautilus-ec2"
+  }
+}
+
+# Manage existing Elastic IP
+resource "aws_eip" "ec2_eip" {
+  vpc = true
+
+  tags = {
+    Name = "nautilus-ec2-eip"
+  }
+}
+
+# Associate Elastic IP with EC2 instance
+resource "aws_eip_association" "ec2_eip_assoc" {
+  instance_id   = aws_instance.ec2.id
+  allocation_id = aws_eip.ec2_eip.id
+}
